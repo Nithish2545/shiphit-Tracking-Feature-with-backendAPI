@@ -30,6 +30,7 @@ const AwbTracking = () => {
       const response = await axios.post(
         "http://localhost:3000/awb-tracking-details",
         {
+          TOKEN:"shiphit_f83a1b4076b71e2e2fa77e3c72f73d34f9a60c349dbc708e15fdd98756e72c96",
           AWBID: awbTrackingID, // Use the value from the form
         }
       );
