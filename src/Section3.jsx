@@ -1,7 +1,7 @@
 function Section3() {
   return (
-    <div className="mt-7  mb-7 flex flex-col justify-between">
-      <div className="bg-white p-4 rounded-3xl">
+    <div className="mt-7   mb-7 flex flex-col items-center justify-between">
+      <div className="bg-white w-fit p-4 rounded-3xl">
         <h1 className="font-bold text-xl pb-2">Details</h1>
         <div className="flex gap-3"></div>
         <div className="flex gap-5">

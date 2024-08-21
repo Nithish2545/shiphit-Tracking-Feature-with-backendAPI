@@ -1,272 +1,109 @@
+import { useState } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import Lottie from "react-lottie";
-import loadingAnimationData from "./loadingAnimation.json"; // Import your Lottie animation JSON file
 
-const AwbTracking = () => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm();
+function AwbTrackingForm() {
+  const [awbTrackingID, setAwbTrackingID] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [trackingData, setTrackingData] = useState(null);
+  const [error, setError] = useState(null);
 
-  const [formData, setFormData] = useState({});
-  const [isReadonly, setIsReadonly] = useState(true);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-
-  const onSubmit = async (data) => {
-    // Preserve the AWB Tracking ID
-    const awbTrackingID = data.awbTrackingID;
-
-    // Reset the form fields, excluding the AWB Tracking ID
-    reset({ awbTrackingID });
-
-    setIsLoading(true); // Set loading state to true
-
+  const trackShipment = async (awbTrackingID) => {
+    console.log(typeof awbTrackingID)
     try {
       const response = await axios.post(
-        "http://localhost:3000/awb-tracking-details",
+        "https://awb-tracking-api.onrender.com/awb-tracking-details",
         {
           TOKEN:"shiphit_f83a1b4076b71e2e2fa77e3c72f73d34f9a60c349dbc708e15fdd98756e72c96",
           AWBID: awbTrackingID, // Use the value from the form
         }
       );
-
-      const responseData = response.data;
-      console.log("Response data:", responseData);
-
-      // Clear previous formData if any
-      setFormData({});
-
-      // Update formData with the new response data
-      setFormData(responseData);
-
-      // Optionally, set `isReadonly` to true if you want the fields to be read-only after fetching data
-      setIsReadonly(true);
+      // Store the tracking data in state
+      setTrackingData(response.data);
+      // Optionally, store the response data in local storage
+      localStorage.setItem("awbTrackingData", JSON.stringify(response.data));
+      setError(null); // Clear any previous error
     } catch (error) {
-      // Clear formData and reset other fields on error
-      await setFormData({});
-      await reset();
-      console.error("Error fetching data from server:", error);
-      alert("Invalid AWB Tracking ID");
-    } finally {
-      setIsLoading(false); // Set loading state to false
+      console.error("Error fetching tracking details:", error);
+      setError("Unable to fetch tracking details. Please check the tracking number and try again.");
+      setTrackingData(null); // Clear previous data if there's an error
     }
   };
 
-  // Update form fields when formData changes
-  useEffect(() => {
-    if (Object.keys(formData).length > 0) {
-      Object.keys(formData).forEach((key) => {
-        if (key === "DateTimeStamp") {
-          setValue("update", formData.update + " " + formData.DateTimeStamp);
-        } else {
-          setValue(key, formData[key]);
-        }
-      });
-    } else {
-      // Clear form fields when formData is empty
-      reset({ awbTrackingID: formData.awbTrackingID });
-    }
-  }, [formData, setValue, reset]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  // Lottie animation options
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: loadingAnimationData, // Use your Lottie animation file
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
+    await trackShipment(awbTrackingID);
+
+    setLoading(false);
+    setAwbTrackingID(""); // Clear the form after submission
   };
 
   return (
-    <div className="w-full h-screen mx-auto flex justify-center items-center bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
-        className="w-full max-w-lg bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit}
+        className="w-full max-w-md mx-auto p-6 bg-white shadow-md rounded-lg"
       >
-        <div className="flex pb-4 mb-5 border-b-2 items-end gap-4 sm:gap-10">
-          <div className="flex-1">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="awb-id"
-            >
-              AWB Tracking ID
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="awb-id"
-              type="text"
-              placeholder="Tracking ID"
-              {...register("awbTrackingID", {
-                required: "AWB Tracking ID is required",
-                minLength: {
-                  value: 6,
-                  message: "AWB Tracking ID must be at least 6 characters",
-                },
-                maxLength: {
-                  value: 20,
-                  message: "AWB Tracking ID must be at most 20 characters",
-                },
-              })}
-            />
-            {errors.awbTrackingID && (
-              <p className="text-red-500 text-xs italic">
-                {errors.awbTrackingID.message}
-              </p>
-            )}
-          </div>
-          <button
-            className="bg-blue-500 h-fit w-fit hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center"
-            type="submit"
-            disabled={isLoading} // Disable button when loading
-          >
-            {isLoading ? (
-              <Lottie options={defaultOptions} height={20} width={20} />
-            ) : (
-              "Submit"
-            )}
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="consignee-name"
-            >
-              Consignee Name
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="consignee-name"
-              type="text"
-              readOnly={isReadonly}
-              placeholder="Consignee Name"
-              {...register("consigneeName")}
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="consignor-name"
-            >
-              Consignor Name
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="consignor-name"
-              type="text"
-              readOnly={isReadonly}
-              placeholder="Consignor Name"
-              {...register("consignorName")}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="consignee-phone"
-            >
-              Consignee Phone Number
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="consignee-phone"
-              type="tel"
-              readOnly={isReadonly}
-              placeholder="Consignee Phone Number"
-              {...register("consigneePhoneNumber")}
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="consignor-phone"
-            >
-              Consignor Phone Number
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="consignor-phone"
-              type="tel"
-              readOnly={isReadonly}
-              placeholder="Consignor Phone Number"
-              {...register("consignorPhoneNumber")}
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="from"
-          >
-            From
-          </label>
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          AWB Tracking ID:
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="from"
             type="text"
-            placeholder="From"
-            readOnly={isReadonly}
-            {...register("from")}
+            value={awbTrackingID}
+            onChange={(e) => setAwbTrackingID(e.target.value)}
+            required
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#8447D6] focus:border-[#8447D6] sm:text-sm"
           />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="to"
-          >
-            To
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="to"
-            type="text"
-            placeholder="To"
-            readOnly={isReadonly}
-            {...register("to")}
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="weight"
-          >
-            Weight
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="weight"
-            type="text"
-            readOnly={isReadonly}
-            placeholder="Weight"
-            {...register("weight")}
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="update"
-          >
-            Update Information
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="update"
-            type="text"
-            placeholder="Update Information"
-            readOnly={isReadonly}
-            {...register("update")}
-          />
-        </div>
+        </label>
+        <button
+          type="submit"
+          className={`w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8447D6] hover:bg-[#AC77F2] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8447D6] ${
+            loading ? "cursor-not-allowed opacity-50" : ""
+          }`}
+          disabled={loading}
+        >
+          {loading ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              ></path>
+            </svg>
+          ) : (
+            "Track"
+          )}
+        </button>
       </form>
+
+      {trackingData && (
+        <div className="mt-6 p-4 bg-white shadow-md rounded-lg">
+          <h3 className="text-lg font-bold text-gray-700">Tracking Details:</h3>
+          <pre className="text-sm text-gray-600">{JSON.stringify(trackingData, null, 2)}</pre>
+        </div>
+      )}
+
+      {error && (
+        <div className="mt-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg">
+          <h3 className="text-lg font-bold">Error</h3>
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
-};
+}
 
-export default AwbTracking;
+export default AwbTrackingForm;

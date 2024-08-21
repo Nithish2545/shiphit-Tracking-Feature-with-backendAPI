@@ -58,15 +58,11 @@
 
 // export default App;
 
-
-import React from 'react'
 import Testing1 from './Testing1'
 
 function App() {
   return (
-    <div>
-<      Testing1 />
-    </div>
+    <div><Testing1/></div>
   )
 }
 
