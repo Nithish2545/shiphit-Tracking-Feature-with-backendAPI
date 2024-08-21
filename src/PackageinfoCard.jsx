@@ -10,7 +10,7 @@ function PackageinfoCard({ title, text, src, Sub_Spr }) {
             <sup className="text-sm">{Sub_Spr}</sup>
           )}
         </h1>
-        <p className="text-[#11111] text-sm font-normal">{text}</p>
+        <p className="text-[#11111] text-sm font-medium">{text}</p>
         <img className="absolute right-6 top-6  " src={src} alt="" />
       </div>
     </div>

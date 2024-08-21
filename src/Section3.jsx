@@ -25,7 +25,7 @@ function Section3() {
           </div>
         </div>
       </div>
-      <div className="bg-black flex  rounded-[40px] p-3">
+      <div className="bg-black flex  rounded-[40px] gap-4 p-3">
         <div className="flex flex-col bg-[#4A4A4A] rounded-[40px] items-center gap-3">
           <div className="w-fit p-4 bg-[#CEC15A] flex  flex-col gap-1 rounded-[40px]">
             <div className="flex items-center gap-2">
@@ -33,11 +33,10 @@ function Section3() {
               <p className="text-base font-bold">Sales Person</p>
             </div>
             <p className="text-[#524D24] font-bold text-sm">ID:222-111-33</p>
-            <p className="underline text-base font-semibold">Matthew Perry</p>
+            <p className="underline text-base font-semibold">Rohan Patel</p>
           </div>
-          <div className="bg-[#757575] cursor-pointer mb-4 w-[150px] flex justify-center gap-10 text-white pt-2 pb-2 rounded-full">
-            <img src="/phone.svg" alt="" />
-            <p className="text-white font-bold text-base">Call</p>
+          <div className="bg-[#757575]  mb-4 w-[150px] flex  justify-center gap-10 text-white pt-2 pb-2 rounded-full">
+            <p className="text-white font-bold text-base  whitespace-nowrap">+91 9988776655</p>
           </div>
         </div>
         <div className="w-fit rounded-[40px]  flex flex-col justify-between bg-[#4A4A4A] p-4 border border-[#656565]">
