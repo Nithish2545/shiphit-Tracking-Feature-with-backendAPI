@@ -1,14 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PackageinfoCard from "./PackageinfoCard";
 
-function Section2() {
-  const [Result, setResult] = useState({});
+function Section2({ data }) {
+  console.log("TrackingDetailsWithProgress", data.service);
+  console.log("TrackingDetailsWithProgress", data.postPickupWeight);
+  console.log("TrackingDetailsWithProgress", data.weightapx);
+  console.log("TrackingDetailsWithProgress", data.actualWeight);
 
-  useEffect(() => {
-    const data = localStorage.getItem("awbTrackingData");
-    setResult(JSON.parse(data));
-  }, []);
-  console.log(Result);
+  const info = {
+    service: data?.service,
+    weight:  data.weightapx ? data.weightapx : data.postPickupWeight ? data.postPickupWeight : data.actualWeight ? actualWeight : "0"  
+  };
+  
+  console.log(info)
+
+  const [Result, setResult] = useState(info);
+
   return (
     <div className="w-fit rounded-3xl bg-white mt-auto mb-auto p-5">
       <img src="/3d-truck.svg" className="w-[600px]" alt="" />
@@ -16,13 +23,13 @@ function Section2() {
         <div className="flex flex-col gap-5">
           <PackageinfoCard
             title={Result.weight}
-            text="Payload"
+            text="WEIGHT"
             src="/kg.png"
             Sub_Spr="kg"
           />
           <PackageinfoCard
             title="16"
-            text="Estimated Time"
+            text="ESTIMATED TIME"
             src="/EstimatedTime.svg"
             Sub_Spr="th"
           />
@@ -30,13 +37,13 @@ function Section2() {
         <div className="flex flex-col gap-5">
           <PackageinfoCard
             title="16"
-            text="Estimated Time"
+            text="No OF BOXES"
             src="/EstimatedTime.svg"
             Sub_Spr="th"
           />
           <PackageinfoCard
             title="16"
-            text="Estimated Time"
+            text="SERVICE"
             src="/EstimatedTime.svg"
             Sub_Spr="th"
           />
@@ -44,7 +51,6 @@ function Section2() {
       </div>
     </div>
   );
-  
 }
 
 export default Section2;

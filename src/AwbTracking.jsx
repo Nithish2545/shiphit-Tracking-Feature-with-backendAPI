@@ -1,109 +1,119 @@
-import { useState } from "react";
-import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore"; 
+import { db } from "./firebase";
 
-function AwbTrackingForm() {
-  const [awbTrackingID, setAwbTrackingID] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [trackingData, setTrackingData] = useState(null);
-  const [error, setError] = useState(null);
+function AwbTracking() {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
+  
+  const navigate = useNavigate();
 
-  const trackShipment = async (awbTrackingID) => {
-    console.log(typeof awbTrackingID)
-    try {
-      const response = await axios.post(
-        "https://awb-tracking-api.onrender.com/awb-tracking-details",
-        {
-          TOKEN:"shiphit_f83a1b4076b71e2e2fa77e3c72f73d34f9a60c349dbc708e15fdd98756e72c96",
-          AWBID: awbTrackingID, // Use the value from the form
-        }
-      );
-      // Store the tracking data in state
-      setTrackingData(response.data);
-      // Optionally, store the response data in local storage
-      localStorage.setItem("awbTrackingData", JSON.stringify(response.data));
-      setError(null); // Clear any previous error
-    } catch (error) {
-      console.error("Error fetching tracking details:", error);
-      setError("Unable to fetch tracking details. Please check the tracking number and try again.");
-      setTrackingData(null); // Clear previous data if there's an error
+  const onSubmit = async (data) => {
+    const awbNumber = parseInt(data.awbNumber, 10); // Ensure awbNumber is a number
+
+    let category = "";
+
+    if (awbNumber > 3000) {
+      category = "franchise_coimbatore";
+    } else if (awbNumber > 2000) {
+      category = "franchise_pondy";
+    } else if (awbNumber > 1000) {
+      category = "pickup";
+    } else {
+      setError("awbNumber", {
+        type: "manual",
+        message: "AWB Number is not valid",
+      });
+      return;
     }
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    try {
+      const collectionRef = collection(db, category);
+      const q = query(collectionRef, where("awbNumber", "==", awbNumber),
+      // where("vendorName", "==", "UPS")
+    );
+      const querySnapshot = await getDocs(q);
 
-    await trackShipment(awbTrackingID);
-
-    setLoading(false);
-    setAwbTrackingID(""); // Clear the form after submission
+      if (!querySnapshot.empty) {
+        navigate("/TrackingDetails", { state: { awbNumber, category } });
+      } else {
+        setError("awbNumber", {
+          type: "manual",
+          message: "AWB number is not found",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data from Firestore:", error);
+      setError("awbNumber", {
+        type: "manual",
+        message: "An error occurred while searching for the AWB number",
+      });
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md mx-auto p-6 bg-white shadow-md rounded-lg"
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white shadow-md rounded-lg p-8 max-w-sm w-full"
       >
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          AWB Tracking ID:
-          <input
-            type="text"
-            value={awbTrackingID}
-            onChange={(e) => setAwbTrackingID(e.target.value)}
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#8447D6] focus:border-[#8447D6] sm:text-sm"
+        <div className="flex flex-col items-center">
+          <img
+            src="/Track-icon.svg"
+            alt="Track Icon"
+            className="w-12 h-12 mb-4"
           />
-        </label>
+          <label
+            htmlFor="awbNumber"
+            className="text-lg font-medium text-gray-700"
+          >
+            Enter AWB Number
+          </label>
+        </div>
+        <input
+          type="text"
+          id="awbNumber"
+          placeholder="Enter AWB Number"
+          {...register("awbNumber", {
+            required: "AWB Number is required",
+            pattern: {
+              value: /^[0-9]+$/,
+              message: "AWB Number must be a number",
+            },
+            minLength: {
+              value: 4,
+              message: "AWB Number must be exactly 4 digits",
+            },
+            maxLength: {
+              value: 4,
+              message: "AWB Number must be exactly 4 digits",
+            },
+          })}
+          className={`mt-4 w-full px-4 py-2 border rounded-lg focus:outline-none ${
+            errors.awbNumber
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-purple-500"
+          }`}
+        />
+        {errors.awbNumber && (
+          <p className="mt-2 text-sm text-red-500">
+            {errors.awbNumber.message}
+          </p>
+        )}
         <button
           type="submit"
-          className={`w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#8447D6] hover:bg-[#AC77F2] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8447D6] ${
-            loading ? "cursor-not-allowed opacity-50" : ""
-          }`}
-          disabled={loading}
+          className="mt-6 w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors duration-300"
         >
-          {loading ? (
-            <svg
-              className="animate-spin h-5 w-5 text-white mx-auto"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-              ></path>
-            </svg>
-          ) : (
-            "Track"
-          )}
+          Track
         </button>
       </form>
-
-      {trackingData && (
-        <div className="mt-6 p-4 bg-white shadow-md rounded-lg">
-          <h3 className="text-lg font-bold text-gray-700">Tracking Details:</h3>
-          <pre className="text-sm text-gray-600">{JSON.stringify(trackingData, null, 2)}</pre>
-        </div>
-      )}
-
-      {error && (
-        <div className="mt-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg">
-          <h3 className="text-lg font-bold">Error</h3>
-          <p>{error}</p>
-        </div>
-      )}
     </div>
   );
 }
 
-export default AwbTrackingForm;
+export default AwbTracking;
