@@ -84,7 +84,7 @@ function Home() {
 
 
   return (
-    <div className="home max-w-[1440px]  flex  gap-3 justify-between bg-[#DDCFF0] rounded-3xl">
+    <div className="sm:flex sm:flex-col home max-w-[1440px] flex  gap-3 justify-between bg-[#DDCFF0] rounded-3xl">
       <Section1 data={data[0]} />
       <div className="flex rounded-3xl w-[75%] justify-between">
         <Section2 data={data[0]} EstimatedDate={ getEstimatedDate()}/>

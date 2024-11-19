@@ -7,10 +7,22 @@ export default {
   theme: {
     extend: {
       screens: {
-        'sm': '640px',    // Small screens and up
-        'tb': '768px',    // Tablet screens and up
-        'lp': '1024px',   // Laptop screens and up
-        'lg': '1280px',   // Large screens and up
+        'tb': '768px',            // Tablet screens and up
+        'lp': '1024px',           // Laptop screens and up
+        'lg': '1280px',           // Large screens and up
+
+        // Custom min and max breakpoints
+        'min-sm': {'min': '340px'},  // Minimum 540px
+        'max-sm': {'max': '339px'},  // Maximum 539px
+
+        'min-tb': {'min': '768px'},  // Minimum 768px
+        'max-tb': {'max': '767px'},  // Maximum 767px
+
+        'min-lp': {'min': '1024px'}, // Minimum 1024px
+        'max-lp': {'max': '1023px'}, // Maximum 1023px
+
+        'min-lg': {'min': '1280px'}, // Minimum 1280px
+        'max-lg': {'max': '1279px'}, // Maximum 1279px
       },
       colors: {
         primary: '#111111',   // Dark color
