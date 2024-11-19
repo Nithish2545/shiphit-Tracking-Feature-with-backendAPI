@@ -115,5 +115,4 @@ function AwbTracking() {
     </div>
   );
 }
-
 export default AwbTracking;

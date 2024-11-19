@@ -1,11 +1,8 @@
 import TrackingDetailsWithProgress from "./TrackingDetailsWithProgress";
-
-function Section1({data}) {
+import "./section1.css"
+function Section1({ data }) {
   return (
-    <div className=" pl-4 relative h-screen overflow-y-auto scrollbar-hide-y flex flex-col items-center">
-      <div className="sticky top-0 bg-[#FDFBF0] z-50 h-20 flex items-center">
-        <h1 className="font-bold text-2xl">Tracking</h1>
-      </div>
+    <div className="w-[25%] border rounded-3xl relative h-screen overflow-y-auto scrollbar-custom flex flex-col items-center">
       <TrackingDetailsWithProgress data={data} />
     </div>
   );
