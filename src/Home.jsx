@@ -82,10 +82,9 @@ function Home() {
   }
 
   return (
-    <div className="max-w-[1440px] flex  gap-3 justify-between bg-[#DDCFF0] rounded-3xl">
+    <div className="sm:flex   sm:flex-col sm:px-2  max-w-[1440px] w-full lp:flex lp:flex-row gap-3 justify-between bg-[#DDCFF0] lp:rounded-3xl ">
       <Section1 data={data[0]} />
-      <div className="flex rounded-3xl w-[65%] justify-between">
-        <Section2 data={data[0]} EstimatedDate={getEstimatedDate()} />
+      <div className="sm:pb-4 flex rounded-3xl lp:w-[35%] sm:w-full justify-between sm:flex sm:justify-center">
         <Section3 data={data[0]} EstimatedDate={getEstimatedDate()} />
       </div>
     </div>

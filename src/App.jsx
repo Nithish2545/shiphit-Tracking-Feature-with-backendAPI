@@ -6,7 +6,7 @@ import AwbTracking from "./AwbTracking";
 function App() {
   return (
     <Router>
-      <div className="container mx-auto flex justify-center">
+      <div className="container mx-auto flex justify-center sm:max-w-full">
         <Routes>
           <Route path="/" element={<AwbTracking />} />
           <Route path="/TrackingDetails" element={<Home />} />

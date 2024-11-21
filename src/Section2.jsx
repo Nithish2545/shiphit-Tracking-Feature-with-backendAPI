@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import PackageinfoCard from "./PackageinfoCard";
 
-function Section2({ data , EstimatedDate}) {
+function Section2({ data , EstimatedDate , status}) {
+  console.log(status)
+  console.log("EstimatedDate" , EstimatedDate)
   const [weight, setweight] = useState({});
   const [NoBoxes, setNoBoxes] = useState({});
 
@@ -18,7 +20,7 @@ function Section2({ data , EstimatedDate}) {
     const checkweight = {
       weightapx: data?.weightapx,
       postPickupWeight: data?.postPickupWeight,
-      actualWeight: data.actualWeight,
+      actualWeight: data?.actualWeight,
     };
 
     if (checkweight.weightapx) {
@@ -71,19 +73,19 @@ function Section2({ data , EstimatedDate}) {
 
   
   return (
-    <div className="w-full rounded-3xl flex flex-col h-full items-center border mt-auto mb-auto justify-around">
+    <div className="sm:h-fit sm:rounded-none sm:gap-10 sm:pt-10 w-[65%] sm:w-[100%] px-2 lp:rounded-3xl flex flex-col h-full items-center border mt-auto mb-auto justify-around">
       <img src="/3d-truck.svg" className="w-full max-w-[340px]" alt="" />
-      <div className="flex gap-5 w-fit">
+      <div className="sm:flex flex-col lp:flex-row gap-5 w-fit sm:pb-5">
         <div className="flex flex-col gap-5 ">
-          <PackageinfoCard
-            fontSize="text-2xl"
-            title={weight.weight}
-            text={weight.payloadname}
-            src="/Weight-icon.svg"
-            Sub_Spr="kg"
+        <PackageinfoCard
+            fontSize="text-[20px]"
+            title={status}
+            text="STATUS"
+            src="/Noboxes.svg"
+            Sub_Spr={""}
           />
           <PackageinfoCard
-            fontSize="text-xl"
+            fontSize="text-[20px]"
             title={EstimatedDate}
             text="ESTIMATED TIME"
             src="/EstimatedTime.svg"
@@ -91,16 +93,16 @@ function Section2({ data , EstimatedDate}) {
           />
         </div>
         <div className="flex flex-col gap-5">
-          <PackageinfoCard
-            fontSize="text-2xl"
-            title={NoBoxes.noofboxes}
-            text="NO OF BOXES"
-            src="/Noboxes.svg"
-            Sub_Spr={NoBoxes.noofboxes > 1 ? "boxes" : "box"}
+        <PackageinfoCard
+            fontSize="text-[20px]"
+            title={weight.weight}
+            text={weight.payloadname}
+            src="/Weight-icon.svg"
+            Sub_Spr="kg"
           />
           <PackageinfoCard
-            fontSize="text-xl"
-            title={data.service}
+            fontSize="text-[20px]"
+            title={data?.service}
             text="SERVICE"
             src="/service-icon.svg"
             Sub_Spr=""
