@@ -52,40 +52,20 @@ function Section3({ data , EstimatedDate}) {
           </div>
         </div>
       </div>
-      <div className="flex  w-fit rounded-[40px] gap-4 p-3">
-        <div className="flex flex-col bg-black rounded-[40px] items-center gap-3">
+      <div className="flex  w-fit rounded-[40px] gap-4 ">
+        <div className="flex flex-col bg-white rounded-[40px] items-center gap-3">
           <div className="w-fit p-4 bg-[#9333EA] flex  flex-col gap-1 rounded-[40px]">
             <div className="flex items-center gap-2">
               <img src="SalesPersonImage.svg" alt="" />
               <p className="text-base font-bold text-white">Customer care</p>
             </div>
             <p className="text-white font-bold text-sm">ID:222-111-33</p>
-            <p className="underline text-base font-semibold text-white">Smitha</p>
+            <p className="underline text-base font-semibold text-white">Jagathesh</p>
           </div>
-          <div className="bg-[#757575]  mb-4 flex  justify-center gap-10 text-white pt-2 pb-2 rounded-full">
-            <p className="text-white font-bold text-base  whitespace-nowrap px-3 ">
+          <div className="bg-green-300  mb-4 flex  justify-center gap-10  pt-2 pb-2 rounded-full">
+            <p className=" font-bold text-base  whitespace-nowrap px-3 ">
               +91 9988776655
             </p>
-          </div>
-        </div>
-        <div className="w-fit rounded-[40px]  flex flex-col justify-between bg-black p-4 border border-[#656565]">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-white">Address</p>
-            <div className="flex items-start gap-2">
-              <img src="/Location.svg" alt="" />
-              <p className="text-white font-bold text-[15px] w-36 ">
-              No. 74, Tiny Sector Industrial Estate, Ekkatuthangal, Chennai - 600032. Tamilnadu, India.
-              </p>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <p className="text-sm font-medium   text-white">Delivery</p>
-            <div className="flex items-start gap-2">
-              <img src="/DeliveryIcon.svg" alt="" />
-              <p className="text-white font-bold text-[15px] w-[80px]">
-                {EstimatedDate}
-              </p>
-            </div>
           </div>
         </div>
       </div>

@@ -47,8 +47,7 @@ function Home() {
     return <div>Loading...</div>;
   }
 
-
-   function getEstimatedDate() {
+  function getEstimatedDate() {
     const input = data[0].pickupCompletedDatatime; // Assume data is defined elsewhere
     if (!input) {
       return;
@@ -82,13 +81,12 @@ function Home() {
     return newDate; // Output: 18/11/2024 + 7 days = 25/11/2024
   }
 
-
   return (
-    <div className="sm:flex sm:flex-col home max-w-[1440px] flex  gap-3 justify-between bg-[#DDCFF0] rounded-3xl">
+    <div className="max-w-[1440px] flex  gap-3 justify-between bg-[#DDCFF0] rounded-3xl">
       <Section1 data={data[0]} />
-      <div className="flex rounded-3xl w-[75%] justify-between">
-        <Section2 data={data[0]} EstimatedDate={ getEstimatedDate()}/>
-        <Section3 data={data[0]} EstimatedDate={ getEstimatedDate()}/>
+      <div className="flex rounded-3xl w-[65%] justify-between">
+        <Section2 data={data[0]} EstimatedDate={getEstimatedDate()} />
+        <Section3 data={data[0]} EstimatedDate={getEstimatedDate()} />
       </div>
     </div>
   );

@@ -71,20 +71,19 @@ function Section2({ data , EstimatedDate}) {
 
   
   return (
-    <div className="w-fit rounded-3xl  flex flex-col h-full items-center border mt-auto mb-auto ">
-      <img src="/3d-truck.svg" className="w-[600px]" alt="" />
-      {/* <img src="/Truck-image.svg" className="w-[600px]" alt="" /> */}
+    <div className="w-full rounded-3xl flex flex-col h-full items-center border mt-auto mb-auto justify-around">
+      <img src="/3d-truck.svg" className="w-full max-w-[340px]" alt="" />
       <div className="flex gap-5 w-fit">
         <div className="flex flex-col gap-5 ">
           <PackageinfoCard
-            fontSize="text-3xl"
+            fontSize="text-2xl"
             title={weight.weight}
             text={weight.payloadname}
             src="/Weight-icon.svg"
             Sub_Spr="kg"
           />
           <PackageinfoCard
-            fontSize="text-2xl"
+            fontSize="text-xl"
             title={EstimatedDate}
             text="ESTIMATED TIME"
             src="/EstimatedTime.svg"
@@ -93,14 +92,14 @@ function Section2({ data , EstimatedDate}) {
         </div>
         <div className="flex flex-col gap-5">
           <PackageinfoCard
-            fontSize="text-3xl"
+            fontSize="text-2xl"
             title={NoBoxes.noofboxes}
             text="NO OF BOXES"
             src="/Noboxes.svg"
             Sub_Spr={NoBoxes.noofboxes > 1 ? "boxes" : "box"}
           />
           <PackageinfoCard
-            fontSize="text-2xl"
+            fontSize="text-xl"
             title={data.service}
             text="SERVICE"
             src="/service-icon.svg"

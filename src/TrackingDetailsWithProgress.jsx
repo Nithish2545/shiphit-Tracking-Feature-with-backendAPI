@@ -56,13 +56,16 @@ function TrackingDetailsChild({ data }) {
       (d) => d.status == "SHIPMENT CONNECTED"
     );
     const fetchTrackingData = async () => {
+      console.log(data.vendorAwbnumber)
       if (shipmentconnected.progress && data.vendorName == "UPS") {
         try {
           const response = await axios.post(
             "https://awb-tracking-api.onrender.com/api/track",
             postData
           );
+        console.log(postData)
           const events = response.data.Response.Events;
+          console.log(events)
           if (events) {
             const newEvents = events
               .reverse()
@@ -208,11 +211,11 @@ function TrackingDetailsChild({ data }) {
                     />
                     {idx < dataSet.length - 1 && (
                       <div
-                        className={`w-px h-full bg-${
-                          d.progress ? "green-200" : "red-300"
+                        className={`w-[2px] h-full bg-${
+                          d.progress ? "green-300" : "red-300"
                         }`}
                       ></div>
-                    )}
+                    )}  
                   </div>
                 ))}
               </div>

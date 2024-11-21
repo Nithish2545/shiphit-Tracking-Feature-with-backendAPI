@@ -57,10 +57,10 @@ function AwbTracking() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center  min-h-screen">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white shadow-md rounded-lg p-8 max-w-sm w-full"
+        className="bg-white border shadow-lg rounded-lg p-8 max-w-sm w-full"
       >
         <div className="flex flex-col items-center">
           <img
