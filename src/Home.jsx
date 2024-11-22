@@ -1,26 +1,47 @@
 import "./Home.css";
 import Section1 from "./Section1";
-import Section2 from "./Section2";
 import Section3 from "./Section3";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "./firebase";
+import { Player } from "@lottiefiles/react-lottie-player";
+import loadingAnimation from "./assets/loadingLottie.json";
 
 function Home() {
   const location = useLocation();
   const { awbNumber } = location.state || {};
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const fetchData = async (collectionName) => {
+
+  const fetchData = (collectionName) => {
     try {
+      // Construct the query
       const q = query(
         collection(db, collectionName),
         where("awbNumber", "==", parseInt(awbNumber))
       );
-      const querySnapshot = await getDocs(q);
-      const fetchedData = querySnapshot.docs.map((doc) => doc.data());
-      setData(fetchedData);
+
+      // Subscribe to real-time updates
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const fetchedData = querySnapshot.docs.map((doc) => doc.data());
+        setData(fetchedData);
+
+        if (fetchedData.length === 0) {
+          setError("No data found for the given AWB number.");
+        } else {
+          setError(null); // Clear any previous errors
+        }
+      });
+
+      // Return the unsubscribe function for cleanup
+      return unsubscribe;
     } catch (e) {
       setError("Failed to fetch data. Please try again.");
     }
@@ -44,7 +65,11 @@ function Home() {
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-screen flex justify-center items-center w-full">
+        <Player autoplay loop src={loadingAnimation} className="w-80 h-80" />
+      </div>
+    );
   }
 
   function getEstimatedDate() {
@@ -85,7 +110,11 @@ function Home() {
     <div className="sm:flex   sm:flex-col sm:px-2  max-w-[1440px] w-full lp:flex lp:flex-row gap-3 justify-between bg-[#DDCFF0] lp:rounded-3xl ">
       <Section1 data={data[0]} />
       <div className="sm:pb-4 flex rounded-3xl lp:w-[35%] sm:w-full justify-between sm:flex sm:justify-center">
-        <Section3 data={data[0]} EstimatedDate={getEstimatedDate()} />
+        <Section3
+          awbNumber={awbNumber}
+          data={data[0]}
+          EstimatedDate={getEstimatedDate()}
+        />
       </div>
     </div>
   );

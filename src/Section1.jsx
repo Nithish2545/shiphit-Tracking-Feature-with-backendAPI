@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import "./section1.css";
 import Section2 from "./Section2";
 import axios from "axios";
+import { Player } from "@lottiefiles/react-lottie-player";
+import loadingAnimation from "./assets/loadingLottie.json";
 
 function Section1({ data }) {
   const imageStyle = { width: 35 };
@@ -48,25 +50,22 @@ function Section1({ data }) {
 
   const [dataSet, setDataSet] = useState(initialDataSet);
   const [addedStatuses, setAddedStatuses] = useState(new Set());
-  const [isLoading, setIsLoading] = useState(false);
   const [FoundText, showNotFoundText] = useState(false);
-  console.log(dataSet);
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     const shipmentconnected = dataSet.find(
       (d) => d.status == "SHIPMENT CONNECTED"
     );
     const fetchTrackingData = async () => {
-      console.log(data.vendorAwbnumber);
       if (shipmentconnected.progress && data.vendorName == "UPS") {
+        setloading(true);
         try {
           const response = await axios.post(
             "https://awb-tracking-api.onrender.com/api/track",
             postData
           );
-          console.log(postData);
           const events = response.data.Response.Events;
-          console.log(events);
           if (events) {
             const newEvents = events
               .reverse()
@@ -76,7 +75,6 @@ function Section1({ data }) {
               const transformedData = newEvents.map((d) => {
                 // Replace "UPS" with "SHIPHIT" in the status message
                 const status = d.Status.replace(/UPS/gi, "SHIPHIT");
-
                 return {
                   status: status,
                   dateTime: `${d.EventDate}, ${d.EventTime1}`,
@@ -96,7 +94,7 @@ function Section1({ data }) {
         } catch (error) {
           console.error("Error fetching tracking data:", error);
         } finally {
-          setIsLoading(false);
+          setloading(false);
         }
         return;
       }
@@ -137,14 +135,11 @@ function Section1({ data }) {
   })();
 
   // Conditionally render loading screen or the actual data
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center justify-center">
-          <div className="w-12 h-12 border-4 border-t-4 border-gray-500 rounded-full animate-spin"></div>
-          <p className="mt-4 text-sm font-medium text-gray-600">Loading...</p>
+        <div className="fixed left-0  flex justify-center h-screen items-center bg-white w-full">
+          <Player autoplay loop src={loadingAnimation} className="w-80 h-80" />
         </div>
-      </div>
     );
   }
 
@@ -182,106 +177,106 @@ function Section1({ data }) {
     return newDate; // Output: 18/11/2024 + 7 days = 25/11/2024
   }
 
-
   return (
-      <div className="sm:w-[100%] w-full sm:gap-10 sm:flex-col-reverse lp:flex lp:flex-row   rounded-3xl sm:rounded-none relative  sm:h-[100%]  lp:h-screen  scrollbar-custom flex flex-col items-center">
-        <div className="lp:w-[60%] sm:w-[100%] h-full flex flex-col justify-center rounded-lg relative ">
-            <div className="w-full  lp:sticky lp:top-0 bg-white z-50 px-3 rounded-2xl">
-              <div className="h-20 flex items-center">
-                <h1 className="font-bold text-2xl">Tracking</h1>
-              </div>
-              <div className="mb-3">
-                <p className="text-sm text-gray-800 font-bold">Your shipment</p>
-                <p className="font-semibold text-xl text-gray-900">
-                  {data.awbNumber}
-                </p>
-              </div>
-              <div className="mb-4 flex gap-1 flex-col">
-                <p className="flex flex-col">
-                  <p
-                    className={`text-[18px] font-medium flex gap-2 ${
-                      lastProgressTrue?.status == "DELIVERED"
-                        ? "text-green-600"
-                        : "text-[#FF7900]"
-                    }`}
-                  >
-                    {lastProgressTrue?.status == "DELIVERED" ? (
+    <div className="sm:w-[100%] w-full sm:gap-10 sm:flex-col-reverse lp:flex lp:flex-row   rounded-3xl sm:rounded-none relative  sm:h-[100%]  lp:h-screen  scrollbar-custom flex flex-col items-center">
+      <div className="lp:w-[60%] sm:px-4  sm:w-[100%] h-full flex flex-col justify-center rounded-lg relative">
+        <div className="w-full  flex  flex-col mb-auto lp:sticky lp:top-0 bg-white z-50 px-3 rounded-2xl">
+          <div className="h-20 flex items-center">
+            <h1 className="font-bold text-2xl">Tracking</h1>
+          </div>
+          <div className="mb-3">
+            <p className="text-sm text-gray-800 font-bold">Your shipment</p>
+            <p className="font-semibold text-xl text-gray-900">
+              {data.awbNumber}
+            </p>
+          </div>
+          <div className="mb-4 flex gap-1 flex-col">
+            <p className="flex flex-col">
+              <p
+                className={`text-[18px] font-medium flex gap-2 ${
+                  lastProgressTrue?.status == "DELIVERED"
+                    ? "text-green-600"
+                    : "text-[#FF7900]"
+                }`}
+              >
+                {lastProgressTrue?.status == "DELIVERED" ? (
+                  <img src="green-checkmark-icon.svg" className="w-4" alt="" />
+                ) : (
+                  <img src="pending-clock-icon.svg" className="w-4" alt="" />
+                )}
+                {lastProgressTrue?.status}
+              </p>
+              <p className="text-[18px] font-medium text-gray-800">
+                {lastProgressTrue?.dateTime}
+              </p>
+              <p className="text-[18px] font-medium text-gray-600">
+                {lastProgressTrue?.Location}
+              </p>
+            </p>
+          </div>
+        </div>
+        {loading ? (
+          <div className="h-full flex justify-center items-center">
+            <Player
+              autoplay
+              loop
+              src={loadingAnimation}
+              className="w-80 h-80"
+            />
+          </div>
+        ) : (
+          <div className="flex gap-8 py-8 pl-4 pr-4 lp:flex lp:mb-auto  lp:overflow-y-auto  scrollbar-custom ">
+            <div className="flex h-fit">
+              <div className="relative">
+                <div className="flex flex-col items-center relative">
+                  {dataSet.map((d, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex flex-col items-center relative z-10 ${
+                        d.enable ? "" : imageHeight
+                      }`}
+                    >
                       <img
-                        src="green-checkmark-icon.svg"
-                        className="w-4"
-                        alt=""
+                        style={imageStyle}
+                        src={
+                          d.progress
+                            ? "green-checkmark-icon.svg"
+                            : "pending-clock-icon.svg"
+                        }
+                        alt="Status icon"
                       />
-                    ) : (
-                      <img
-                        src="pending-clock-icon.svg"
-                        className="w-4"
-                        alt=""
-                      />
-                    )}
-                    {lastProgressTrue?.status}
-                  </p>
-                  <p className="text-[18px] font-medium text-gray-800">
-                    {lastProgressTrue?.dateTime}
-                  </p>
-                  <p className="text-[18px] font-medium text-gray-600">
-                    {lastProgressTrue?.Location}
-                  </p>
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-8 py-8 pl-4 pr-4  lp:overflow-y-auto  scrollbar-custom ">
-              <div className="flex h-fit">
-                <div className="relative">
-                  <div className="flex flex-col items-center relative">
-                    {dataSet.map((d, idx) => (
-                      <div
-                        key={idx}
-                        className={`flex flex-col items-center relative z-10 ${
-                          d.enable ? "" : imageHeight
-                        }`}
-                      >
-                        <img
-                          style={imageStyle}
-                          src={
-                            d.progress
-                              ? "green-checkmark-icon.svg"
-                              : "pending-clock-icon.svg"
-                          }
-                          alt="Status icon"
-                        />
-                        {idx < dataSet.length - 1 && (
-                          <div
-                            className={`w-[2px] h-full bg-${
-                              d.progress ? "green-300" : "red-300"
-                            }`}
-                          ></div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                      {idx < dataSet.length - 1 && (
+                        <div
+                          className={`w-[2px] h-full ${
+                            d.progress ? "bg-green-300" : "bg-red-300"
+                          }`}
+                        ></div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="relative grid grid-cols-1 h-fit">
-                {dataSet.map((d, idx) => (
-                  <div
-                    key={idx}
-                    className={`flex flex-col z-10 ${imageHeight}`}
-                  >
-                    <p className="text-sm font-semibold text-gray-800">
-                      {d.status == "Run sheet"
-                        ? "SHIPMENT SCHEDULED"
-                        : d.status}
-                    </p>
-                    <p className="text-sm text-gray-600">{d.dateTime}</p>
-                    <p className="text-sm text-gray-600">{d.Location}</p>
-                  </div>
-                ))}
-              </div>
             </div>
-        </div>
-        <Section2 data={data} EstimatedDate={getEstimatedDate()} status={lastProgressTrue?.status} />
+            <div className="relative  grid grid-cols-1 h-fit">
+              {dataSet.map((d, idx) => (
+                <div key={idx} className={`flex flex-col z-10 ${imageHeight}`}>
+                  <p className="text-sm font-semibold text-gray-800">
+                    {d.status == "Run sheet" ? "SHIPMENT SCHEDULED" : d.status}
+                  </p>
+                  <p className="text-sm text-gray-600">{d.dateTime}</p>
+                  <p className="text-sm text-gray-600">{d.Location}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-     
+      <Section2
+        data={data}
+        EstimatedDate={getEstimatedDate()}
+        status={lastProgressTrue?.status}
+      />
+    </div>
   );
 }
 export default Section1;

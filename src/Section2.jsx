@@ -73,7 +73,7 @@ function Section2({ data , EstimatedDate , status}) {
 
   
   return (
-    <div className="sm:h-fit sm:rounded-none sm:gap-10 sm:pt-10 w-[65%] sm:w-[100%] px-2 lp:rounded-3xl flex flex-col h-full items-center border mt-auto mb-auto justify-around">
+    <div className="sm:h-fit lp:justify-between sm:rounded-none sm:gap-10 sm:pt-10 w-[65%] sm:w-[100%] px-2 lp:rounded-3xl flex flex-col lp:h-full h-full items-center border mt-auto mb-auto justify-around">
       <img src="/3d-truck.svg" className="w-full max-w-[340px]" alt="" />
       <div className="sm:flex flex-col lp:flex-row gap-5 w-fit sm:pb-5">
         <div className="flex flex-col gap-5 ">
