@@ -23,7 +23,7 @@ function Section3({ data , awbNumber }) {
               </div>
               <div className="flex items-center gap-2 pt-5">
                 <img src="/userlocation.svg" className="w-5" alt="" />
-                <p className="font-semibold text-sm w-[20px]">
+                <p className="font-semibold text-sm w-[250px]">
                   {data?.consignorlocation}
                 </p>
               </div>
