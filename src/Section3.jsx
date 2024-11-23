@@ -36,7 +36,7 @@ function Section3({ data , awbNumber }) {
         <div className="flex sm:w-full flex-col bg-white rounded-[40px] items-center gap-3">
           <div className="sm:w-full p-4 bg-[#9333EA] flex  flex-col gap-1 rounded-[40px]">
             <div className="flex items-center gap-2">
-              <img src="SalesPersonImage.svg" alt="" />
+              <img src="image.png"  className="w-10 rounded-md" alt="" />
               <p className="text-base font-bold text-white">Customer care</p>
             </div>
             <div className="flex justify-between">

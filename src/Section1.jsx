@@ -98,8 +98,12 @@ function Section1({ data }) {
         }
         return;
       }
-      if (data.vendorName == "DHL") {
+      if (data.vendorName == "BOMBINO") {
         showNotFoundText(true);
+        await axios.get("http://localhost:9000/api/track/bombino").then((d) => {
+          console.log(d);
+        });
+        // http://localhost:9000/api/track/bombino
       }
     };
     fetchTrackingData();
@@ -137,9 +141,9 @@ function Section1({ data }) {
   // Conditionally render loading screen or the actual data
   if (loading) {
     return (
-        <div className="fixed left-0  flex justify-center h-screen items-center bg-white w-full">
-          <Player autoplay loop src={loadingAnimation} className="w-80 h-80" />
-        </div>
+      <div className="fixed left-0  flex justify-center h-screen items-center bg-white w-full">
+        <Player autoplay loop src={loadingAnimation} className="w-80 h-80" />
+      </div>
     );
   }
 
