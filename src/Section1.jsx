@@ -6,6 +6,26 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import loadingAnimation from "./assets/loadingLottie.json";
 
 function Section1({ data }) {
+  function extractDateTime(datetimeString) {
+    const dateObject = new Date(datetimeString);
+
+    // Extract date parts
+    const day = String(dateObject.getDate()).padStart(2, "0");
+    const month = String(dateObject.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const year = dateObject.getFullYear();
+
+    // Extract time parts
+    const hours = String(dateObject.getHours()).padStart(2, "0");
+    const minutes = String(dateObject.getMinutes()).padStart(2, "0");
+    const seconds = String(dateObject.getSeconds()).padStart(2, "0");
+
+    // Format the date and time
+    const formattedDate = `${day}-${month}-${year}`;
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+    return { formattedDate, formattedTime };
+  }
+
   const imageStyle = { width: 35 };
   const imageHeight = "h-20";
   const initialDataSet = [
@@ -97,13 +117,64 @@ function Section1({ data }) {
           setloading(false);
         }
         return;
-      }
-      if (data.vendorName == "BOMBINO") {
-        showNotFoundText(true);
-        await axios.get("http://localhost:9000/api/track/bombino").then((d) => {
-          console.log(d);
-        });
-        // http://localhost:9000/api/track/bombino
+      } else if (shipmentconnected.progress && data.vendorName === "BOMBINO") {
+        setloading(true);
+        const baseUrl = "https://awb-tracking-api.onrender.com/api/track/bombino";
+        const bodyContent = {
+          Vendor: "BOMBINO",
+          api_company_id: 2,
+          customer_code: 71787,
+          tracking_no: data.vendorAwbnumber,
+        };
+        try {
+          const response = await axios.post(baseUrl, bodyContent);
+          const events = response.data;
+          console.log(events);
+          if (events) {
+            const newEvents = events
+              .reverse()
+              .filter(
+                (d) =>
+                  !addedStatuses.has(d.event_description.trim().toLowerCase())
+              );
+
+            if (newEvents.length > 0) {
+              const transformedData = newEvents.map((d) => {
+                const result = extractDateTime(d.event_at);
+                return {
+                  status: d.event_description.replace(/UPS/gi, "SHIPHIT"),
+                  dateTime: `${result.formattedDate}, ${result.formattedTime}`,
+                  Location: d.event_location || "",
+                  progress: true,
+                };
+              });
+
+              setDataSet((prev) => [
+                ...prev,
+                ...transformedData.filter(
+                  (event) =>
+                    !prev.some(
+                      (existing) =>
+                        existing.status === event.status &&
+                        existing.dateTime === event.dateTime
+                    )
+                ),
+              ]);
+
+              setAddedStatuses((prev) => {
+                const updated = new Set(prev);
+                newEvents.forEach((e) =>
+                  updated.add(e.event_description.trim().toLowerCase())
+                );
+                return updated;
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Error:", error.message);
+        } finally {
+          setloading(false);
+        }
       }
     };
     fetchTrackingData();
@@ -198,7 +269,8 @@ function Section1({ data }) {
             <p className="flex flex-col">
               <p
                 className={`text-[18px] font-medium flex gap-2 ${
-                  lastProgressTrue?.status == "DELIVERED"
+                  lastProgressTrue?.status == "DELIVERED" ||
+                  lastProgressTrue?.status == "SHIPMENT HAS BEEN DELIVERED"
                     ? "text-green-600"
                     : "text-[#FF7900]"
                 }`}
