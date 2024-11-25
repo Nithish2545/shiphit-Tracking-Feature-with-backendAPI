@@ -45,7 +45,7 @@ function AwbTracking() {
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        navigate("/TrackingDetails", { state: { awbNumber, category } });
+        navigate(`/TrackingDetails/${awbNumber}`);
       } else {
         setError("awbNumber", {
           type: "manual",

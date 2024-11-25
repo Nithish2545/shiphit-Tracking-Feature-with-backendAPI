@@ -8,7 +8,6 @@ import loadingAnimation from "./assets/loadingLottie.json";
 function Section1({ data }) {
   function extractDateTime(datetimeString) {
     const dateObject = new Date(datetimeString);
-
     // Extract date parts
     const day = String(dateObject.getDate()).padStart(2, "0");
     const month = String(dateObject.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
@@ -276,9 +275,9 @@ function Section1({ data }) {
                 }`}
               >
                 {lastProgressTrue?.status == "DELIVERED" ? (
-                  <img src="green-checkmark-icon.svg" className="w-4" alt="" />
+                  <img src="/green-checkmark-icon.svg" className="w-4" alt="" />
                 ) : (
-                  <img src="pending-clock-icon.svg" className="w-4" alt="" />
+                  <img src="/pending-clock-icon.svg" className="w-4" alt="" />
                 )}
                 {lastProgressTrue?.status}
               </p>
@@ -291,6 +290,7 @@ function Section1({ data }) {
             </p>
           </div>
         </div>
+        
         {loading ? (
           <div className="h-full flex justify-center items-center">
             <Player
@@ -316,8 +316,8 @@ function Section1({ data }) {
                         style={imageStyle}
                         src={
                           d.progress
-                            ? "green-checkmark-icon.svg"
-                            : "pending-clock-icon.svg"
+                            ? "/green-checkmark-icon.svg"
+                            : "/pending-clock-icon.svg"
                         }
                         alt="Status icon"
                       />

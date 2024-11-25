@@ -9,7 +9,7 @@ function App() {
       <div className="container mx-auto flex justify-center sm:max-w-full">
         <Routes>
           <Route path="/" element={<AwbTracking />} />
-          <Route path="/TrackingDetails" element={<Home />} />
+          <Route path="/TrackingDetails/:awbNumber" element={<Home />} />
         </Routes>
       </div>
     </Router>

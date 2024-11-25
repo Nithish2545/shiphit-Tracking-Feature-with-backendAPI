@@ -1,7 +1,7 @@
 import "./Home.css";
 import Section1 from "./Section1";
 import Section3 from "./Section3";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -15,11 +15,10 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import loadingAnimation from "./assets/loadingLottie.json";
 
 function Home() {
-  const location = useLocation();
-  const { awbNumber } = location.state || {};
+  const { awbNumber } = useParams();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-
+console.log(awbNumber)
   const fetchData = (collectionName) => {
     try {
       // Construct the query
