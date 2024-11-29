@@ -33,6 +33,20 @@ function getEstimatedDate(data) {
   return newDate; // Output: 18/11/2024 + 7 days = 25/11/2024
 }
 
+function maskPhoneNumber(phoneNumber) {
+  const numberStr = phoneNumber.toString(); // Ensure it's a string
+  const countryCode = numberStr.slice(0, 3); // Extract the country code
+  const lastTwo = numberStr.slice(-2); // Extract the last two digits
+  const maskedPart = '*'.repeat(numberStr.length - 5); // Mask the middle part
+  return `${countryCode}${maskedPart}${lastTwo}`;
+}
+
+
 export default {
   getEstimatedDate: getEstimatedDate,
+  maskPhoneNumber:maskPhoneNumber
 };
+
+
+
+

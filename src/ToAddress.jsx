@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "./firebase";
 import { useForm } from "react-hook-form";
-
+import utility from "../utility/utility_functions" 
 const ToAddress = ({ data, awbNumber }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [collectionName, setcollectionName] = useState("");
@@ -86,7 +86,7 @@ const ToAddress = ({ data, awbNumber }) => {
         <div className="flex items-center gap-2 pt-5">
           <img src="/phone-icon.svg" className="w-5" alt="" />
           <p className="font-semibold text-sm">
-            {data?.consigneephonenumber || (
+            { utility.maskPhoneNumber(data?.consigneephonenumber) || (
               <span className="text-gray-500 italic">
                 Phone number not provided
               </span>
