@@ -18,7 +18,6 @@ function Home() {
   const { awbNumber } = useParams();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-console.log(awbNumber)
   const fetchData = (collectionName) => {
     try {
       // Construct the query
@@ -88,7 +87,6 @@ console.log(awbNumber)
 
     // Split the result into day and month
     const [day, month] = result.split("-").map(Number);
-    console.log(day, month);
     // Ensure the year is correctly handled
     const year = new Date().getFullYear(); // Default to the current year
     const date = new Date(year, month - 1, day); // Months are 0-indexed
@@ -104,7 +102,7 @@ console.log(awbNumber)
     const newDate = `${newDay}/${newMonth}/${newYear}`;
     return newDate; // Output: 18/11/2024 + 7 days = 25/11/2024
   }
-
+console.log(data)
   return (
     <div className="sm:flex   sm:flex-col sm:px-2  max-w-[1440px] w-full lp:flex lp:flex-row gap-3 justify-between bg-[#DDCFF0] lp:rounded-3xl ">
       <Section1 data={data[0]} />

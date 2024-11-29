@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import PackageinfoCard from "./PackageinfoCard";
 
 function Section2({ data , EstimatedDate , status}) {
-  console.log(status)
-  console.log("EstimatedDate" , EstimatedDate)
   const [weight, setweight] = useState({});
   const [NoBoxes, setNoBoxes] = useState({});
 

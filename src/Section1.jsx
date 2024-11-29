@@ -61,10 +61,11 @@ function Section1({ data }) {
   ];
 
   const postData = {
-    UserID: import.meta.env.VITE_USER_ID,
+    UserID: "WF200",
     AWBNo: data.vendorAwbnumber,
-    Password: import.meta.env.VITE_PASSWORD,
-    Type: import.meta.env.VITE_TYPE,
+    Password: "PETTI@123",
+    Type: "C",
+    Vendor: "UPS",
   };
 
   const [dataSet, setDataSet] = useState(initialDataSet);
@@ -80,11 +81,13 @@ function Section1({ data }) {
       if (shipmentconnected.progress && data.vendorName == "UPS") {
         setloading(true);
         try {
+          console.log("..............UPS DATA FEATCHING..............");
           const response = await axios.post(
             "https://awb-tracking-api.onrender.com/api/track",
             postData
           );
           const events = response.data.Response.Events;
+          console.log("..............UPS DATA FEATCHED..............");
           if (events) {
             const newEvents = events
               .reverse()
@@ -118,7 +121,8 @@ function Section1({ data }) {
         return;
       } else if (shipmentconnected.progress && data.vendorName === "BOMBINO") {
         setloading(true);
-        const baseUrl = "https://awb-tracking-api.onrender.com/api/track/bombino";
+        const baseUrl =
+          "https://awb-tracking-api.onrender.com/api/track/bombino";
         const bodyContent = {
           Vendor: "BOMBINO",
           api_company_id: 2,
@@ -136,12 +140,12 @@ function Section1({ data }) {
                 (d) =>
                   !addedStatuses.has(d.event_description.trim().toLowerCase())
               );
-
             if (newEvents.length > 0) {
               const transformedData = newEvents.map((d) => {
                 const result = extractDateTime(d.event_at);
+                console.log(d.event_description);
                 return {
-                  status: d.event_description.replace(/UPS/gi, "SHIPHIT"),
+                  status: d.event_description.replace(/BOMBINO/gi, "SHIPHIT"),
                   dateTime: `${result.formattedDate}, ${result.formattedTime}`,
                   Location: d.event_location || "",
                   progress: true,
@@ -180,7 +184,6 @@ function Section1({ data }) {
   }, [dataSet]);
 
   const updateProgress = (inputStatus) => {
-    console.log("updateProgress!");
     setDataSet((prevData) =>
       prevData.map((item, index) => ({
         ...item,
@@ -234,7 +237,6 @@ function Section1({ data }) {
 
     // Split the result into day and month
     const [day, month] = result.split("-").map(Number);
-    console.log(day, month);
     // Ensure the year is correctly handled
     const year = new Date().getFullYear(); // Default to the current year
     const date = new Date(year, month - 1, day); // Months are 0-indexed
@@ -290,7 +292,7 @@ function Section1({ data }) {
             </p>
           </div>
         </div>
-        
+
         {loading ? (
           <div className="h-full flex justify-center items-center">
             <Player
