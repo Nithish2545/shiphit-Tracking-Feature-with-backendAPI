@@ -14,6 +14,16 @@ function Section3({ data, awbNumber }) {
     return `${firstFive}${maskedSection}${lastTwo}`;
   }
 
+  function maskAddress(input) {
+    if (input.length <= 12) {
+        return input; // No masking needed if input is shorter than or equal to 12 characters
+    }
+    const firstSix = input.slice(0, 6);
+    const lastSix = input.slice(-6);
+    const maskedPart = '*'.repeat(Math.min(6, input.length - 12)); // Ensure no more than 5 '*'
+    return `${firstSix}${maskedPart}${lastSix}`;
+}
+
   return (
     <div className="items-center flex flex-col justify-between px-2 gap-4">
       <div className="bg-white w-fit  rounded-3xl px-3 py-2">
@@ -37,12 +47,12 @@ function Section3({ data, awbNumber }) {
               <div className="flex items-center gap-2 pt-5">
                 <img src="/userlocation.svg" className="w-5" alt="" />
                 <p className="font-semibold text-sm w-[250px]">
-                  {data?.consignorlocation}
+                  {maskAddress(data?.consignorlocation)}
                 </p>
               </div>
             </div>
           </div>
-          <ToAddress data={data} awbNumber={awbNumber} />
+          <ToAddress data={data} awbNumber={awbNumber} maskAddress={maskAddress} />
         </div>
       </div>
       <div className="sm:w-full flex w-fit rounded-[40px] gap-4">

@@ -75,8 +75,8 @@ function Section2({ data , EstimatedDate , status}) {
       {/* <img src="/3d-truck.svg" className="w-full max-w-[340px]" alt="" /> */}
       {/* <img src="/DroneJ011.svg" className="w-full max-w-[100%]" alt="" /> */}
       {/* <img src="/3d-rendering-drone.svg" className="w-full max-w-[100%]" alt="" /> */}
-      <img src="/flying-drone.svg" className="w-full max-w-[100%] lp:max-w-[70%]" alt="" />
-      
+      {/* <img src="/flying-drone.svg" className="w-full max-w-[100%] lp:max-w-[70%]" alt="" /> */}
+      <img src="/flying-drone2.png" className="w-full max-w-[100%] lp:max-w-[70%]" alt="" />
       <div className="sm:flex flex-col lp:flex-row gap-5 w-fit sm:pb-5">
         <div className="flex flex-col gap-5 ">
         <PackageinfoCard

@@ -3,7 +3,7 @@ import { collection, doc, getDocs, query, updateDoc, where } from "firebase/fire
 import { db } from "./firebase";
 import { useForm } from "react-hook-form";
 import utility from "../utility/utility_functions" 
-const ToAddress = ({ data, awbNumber }) => {
+const ToAddress = ({ data, awbNumber , maskAddress}) => {
   const [showPopup, setShowPopup] = useState(false);
   const [collectionName, setcollectionName] = useState("");
 
@@ -96,7 +96,7 @@ const ToAddress = ({ data, awbNumber }) => {
         <div className="flex items-center gap-2 pt-5">
           <img src="/userlocation.svg" className="w-6" alt="" />
           <p className="font-semibold text-sm w-[250px] text-wrap">
-            {data?.consigneelocation || (
+            {maskAddress(data?.consigneelocation) || (
               <span className="text-gray-500 italic">Address not provided</span>
             )}
           </p>
