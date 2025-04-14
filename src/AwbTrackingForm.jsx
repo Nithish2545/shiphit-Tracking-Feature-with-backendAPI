@@ -10,13 +10,14 @@ function AwbTrackingForm() {
     setLoading(true); // Start loading
 
     try {
-      const response = await axios.post("http://localhost:3000/awb-tracking-details", {
-        TOKEN: "shiphit_f83a1b4076b71e2e2fa77e3c72f73d34f9a60c349dbc708e15fdd98756e72c96",
-        AWBID: awbTrackingID,
-      });
-
-      console.log(awbTrackingID);
-      console.log(response.data);
+      const response = await axios.post(
+        "http://localhost:3000/awb-tracking-details",
+        {
+          TOKEN:
+            "shiphit_f83a1b4076b71e2e2fa77e3c72f73d34f9a60c349dbc708e15fdd98756e72c96",
+          AWBID: awbTrackingID,
+        }
+      );
 
       // Store the response data in local storage
       localStorage.setItem("awbTrackingData", JSON.stringify(response.data));
@@ -31,7 +32,10 @@ function AwbTrackingForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 p-4 bg-white shadow-md rounded-lg">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto mt-10 p-4 bg-white shadow-md rounded-lg"
+    >
       <label className="block text-gray-700 text-sm font-bold mb-2">
         AWB Tracking ID:
         <input

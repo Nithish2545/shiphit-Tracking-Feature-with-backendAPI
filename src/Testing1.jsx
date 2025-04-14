@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 const AWBTracking = () => {
-  const [trackingNumber, setTrackingNumber] = useState('');
+  const [trackingNumber, setTrackingNumber] = useState("");
   const [trackingInfo, setTrackingInfo] = useState(null);
   const [error, setError] = useState(null);
 
   const handleTrack = async () => {
-    console.log(trackingNumber)
     try {
       const response = await axios.post(
-        'https://api.aftership.com/v4/trackings',
+        "https://api.aftership.com/v4/trackings",
         {
           tracking: {
             tracking_number: trackingNumber,
@@ -18,15 +17,15 @@ const AWBTracking = () => {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'aftership-api-key': 'asat_5921ebb5c77e4a3e884c55eca4fe4655', // Replace with your actual API key
+            "Content-Type": "application/json",
+            "aftership-api-key": "asat_5921ebb5c77e4a3e884c55eca4fe4655", // Replace with your actual API key
           },
         }
       );
       setTrackingInfo(response.data.data.tracking);
       setError(null);
     } catch (err) {
-      setError('Tracking not found or API request failed.');
+      setError("Tracking not found or API request failed.");
       setTrackingInfo(null);
     }
   };
@@ -42,7 +41,7 @@ const AWBTracking = () => {
       />
       <button onClick={handleTrack}>Track</button>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {trackingInfo && (
         <div>
@@ -54,7 +53,7 @@ const AWBTracking = () => {
           <ul>
             {trackingInfo.checkpoints.map((checkpoint, index) => (
               <li key={index}>
-                {checkpoint.location} - {checkpoint.message} on{' '}
+                {checkpoint.location} - {checkpoint.message} on{" "}
                 {checkpoint.checkpoint_time}
               </li>
             ))}

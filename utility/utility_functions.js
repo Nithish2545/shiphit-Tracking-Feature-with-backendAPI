@@ -1,5 +1,4 @@
 function getEstimatedDate(data) {
-  console.log("data" , data)
   const input = data.pickupCompletedDatatime; // Assume data is defined elsewhere
   if (!input) {
     return;
@@ -16,7 +15,6 @@ function getEstimatedDate(data) {
 
   // Split the result into day and month
   const [day, month] = result.split("-").map(Number);
-  console.log(day, month);
   // Ensure the year is correctly handled
   const year = new Date().getFullYear(); // Default to the current year
   const date = new Date(year, month - 1, day); // Months are 0-indexed
@@ -37,16 +35,11 @@ function maskPhoneNumber(phoneNumber) {
   const numberStr = phoneNumber.toString(); // Ensure it's a string
   const countryCode = numberStr.slice(0, 3); // Extract the country code
   const lastTwo = numberStr.slice(-2); // Extract the last two digits
-  const maskedPart = '*'.repeat(numberStr.length - 5); // Mask the middle part
+  const maskedPart = "*".repeat(numberStr.length - 5); // Mask the middle part
   return `${countryCode}${maskedPart}${lastTwo}`;
 }
 
-
 export default {
   getEstimatedDate: getEstimatedDate,
-  maskPhoneNumber:maskPhoneNumber
+  maskPhoneNumber: maskPhoneNumber,
 };
-
-
-
-

@@ -65,7 +65,13 @@ function Section1({ data }) {
     AWBNo: data.vendorAwbnumber,
     Password: "PETTI@123",
     Type: "C",
-    Vendor: "UPS",
+  };
+
+  const postDataAtlantic = {
+    UserID: "ECSG03",
+    AWBNo: data.vendorAwbnumber,
+    Password: "ECSG03@123",
+    Type: "A",
   };
 
   const [dataSet, setDataSet] = useState(initialDataSet);
@@ -81,13 +87,11 @@ function Section1({ data }) {
       if (shipmentconnected.progress && data.vendorName == "UPS") {
         setloading(true);
         try {
-          console.log("..............UPS DATA FEATCHING..............");
           const response = await axios.post(
-            "https://awb-tracking-api.onrender.com/api/track",
+            "https://awb-tracking-api.onrender.com/api/track/ups",
             postData
           );
           const events = response.data.Response.Events;
-          console.log("..............UPS DATA FEATCHED..............");
           if (events) {
             const newEvents = events
               .reverse()
@@ -114,11 +118,12 @@ function Section1({ data }) {
             }
           }
         } catch (error) {
-          console.error("Error fetching tracking data:", error);
+          console.log("Error fetching tracking data:", error);
         } finally {
           setloading(false);
         }
         return;
+        // ATLANTIC
       } else if (shipmentconnected.progress && data.vendorName === "BOMBINO") {
         setloading(true);
         const baseUrl =
@@ -132,7 +137,6 @@ function Section1({ data }) {
         try {
           const response = await axios.post(baseUrl, bodyContent);
           const events = response.data;
-          console.log(events);
           if (events) {
             const newEvents = events
               .reverse()
@@ -143,7 +147,6 @@ function Section1({ data }) {
             if (newEvents.length > 0) {
               const transformedData = newEvents.map((d) => {
                 const result = extractDateTime(d.event_at);
-                console.log(d.event_description);
                 return {
                   status: d.event_description.replace(/BOMBINO/gi, "SHIPHIT"),
                   dateTime: `${result.formattedDate}, ${result.formattedTime}`,
@@ -178,6 +181,44 @@ function Section1({ data }) {
         } finally {
           setloading(false);
         }
+      } else if (shipmentconnected.progress && data.vendorName === "ATLANTIC") {
+        setloading(true);
+        try {
+          const response = await axios.post(
+            "https://awb-tracking-api.onrender.com/api/track/atlantic",
+            postDataAtlantic
+          );
+          const events = response.data.Response.Events;
+          if (events) {
+            const newEvents = events
+              .reverse()
+              .filter((d) => !addedStatuses.has(d.Status));
+
+            if (newEvents.length > 0) {
+              const transformedData = newEvents.map((d) => {
+                // Replace "UPS" with "SHIPHIT" in the status message
+                const status = d.Status.replace(/atlantic/gi, "shiphit");
+                return {
+                  status: status,
+                  dateTime: `${d.EventDate}, ${d.EventTime1}`,
+                  Location: d.Location || "",
+                  progress: true,
+                };
+              });
+              setDataSet((prev) => [...prev, ...transformedData]);
+              setAddedStatuses((prev) => {
+                const updated = new Set(prev);
+                newEvents.forEach((e) => updated.add(e.Status));
+                return updated;
+              });
+            }
+          }
+        } catch (error) {
+          console.log("Error fetching tracking data:", error);
+        } finally {
+          setloading(false);
+        }
+        return;
       }
     };
     fetchTrackingData();
