@@ -32,6 +32,9 @@ function getEstimatedDate(data) {
 }
 
 function maskPhoneNumber(phoneNumber) {
+  if (phoneNumber == " ") {
+    return " ";
+  }
   const numberStr = phoneNumber.toString(); // Ensure it's a string
   const countryCode = numberStr.slice(0, 3); // Extract the country code
   const lastTwo = numberStr.slice(-2); // Extract the last two digits

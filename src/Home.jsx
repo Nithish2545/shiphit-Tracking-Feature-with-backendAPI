@@ -102,7 +102,6 @@ function Home() {
     const newDate = `${newDay}/${newMonth}/${newYear}`;
     return newDate; // Output: 18/11/2024 + 7 days = 25/11/2024
   }
-console.log(data)
   return (
     <div className="sm:flex   sm:flex-col sm:px-2  max-w-[1440px] w-full lp:flex lp:flex-row gap-3 justify-between bg-[#DDCFF0] lp:rounded-3xl ">
       <Section1 data={data[0]} />

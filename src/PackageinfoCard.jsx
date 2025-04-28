@@ -24,7 +24,7 @@ function PackageinfoCard({ title, text, src, Sub_Spr, fontSize }) {
               : ""
           }`}
         >
-          {title}
+          {title?.length > 30 ? title?.slice(0, 30) + "..." : title}
           <sub className="text-sm">{Sub_Spr}</sub>
         </h1>
         <p className="text-[#11111] text-sm font-medium max-h-24 overflow-y-auto">
@@ -32,7 +32,6 @@ function PackageinfoCard({ title, text, src, Sub_Spr, fontSize }) {
         </p>
         <img className="absolute right-6 top-6 w-10" src={src} alt="" />
       </div>
-      
     </div>
   );
 }
