@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PackageinfoCard from "./PackageinfoCard";
 
-function Section2({ data , EstimatedDate , status}) {
+function Section2({ data, EstimatedDate, status }) {
   const [weight, setweight] = useState({});
   const [NoBoxes, setNoBoxes] = useState({});
 
@@ -69,17 +69,20 @@ function Section2({ data , EstimatedDate , status}) {
     }
   }, []);
 
-  
   return (
-    <div className="sm:h-fit lp:justify-between sm:rounded-none sm:gap-10 sm:pt-10 w-[65%] sm:w-[100%] px-2 lp:rounded-3xl flex flex-col lp:h-full h-full items-center border mt-auto mb-auto justify-around">
+    <div className=" sm:h-fit lp:justify-between sm:rounded-none sm:gap-10 sm:pt-10 w-[65%] sm:w-[100%] px-2 lp:rounded-3xl flex flex-col lp:h-full h-full items-center border mt-auto mb-auto justify-around">
       {/* <img src="/3d-truck.svg" className="w-full max-w-[340px]" alt="" /> */}
       {/* <img src="/DroneJ011.svg" className="w-full max-w-[100%]" alt="" /> */}
       {/* <img src="/3d-rendering-drone.svg" className="w-full max-w-[100%]" alt="" /> */}
       {/* <img src="/flying-drone.svg" className="w-full max-w-[100%] lp:max-w-[70%]" alt="" /> */}
-      <img src="/flying-drone2.png" className="w-full max-w-[100%] lp:max-w-[70%]" alt="" />
+      <img
+        src="/image_10-removebg-preview.png"
+        className="w-full max-w-[100%] lp:max-w-[44%]"
+        alt=""
+      />
       <div className="sm:flex flex-col lp:flex-row gap-5 w-fit sm:pb-5">
         <div className="flex flex-col gap-5 ">
-        <PackageinfoCard
+          <PackageinfoCard
             fontSize="text-[20px]"
             title={status}
             text="STATUS"
@@ -95,7 +98,7 @@ function Section2({ data , EstimatedDate , status}) {
           />
         </div>
         <div className="flex flex-col gap-5">
-        <PackageinfoCard
+          <PackageinfoCard
             fontSize="text-[20px]"
             title={weight.weight}
             text={weight.payloadname}
