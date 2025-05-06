@@ -92,7 +92,7 @@ function Section2({ data, EstimatedDate, status }) {
           <PackageinfoCard
             fontSize="text-[20px]"
             title={EstimatedDate}
-            text="ESTIMATED TIME"
+            text="ESTIMATED DATE"
             src="/EstimatedTime.svg"
             Sub_Spr=""
           />
