@@ -261,37 +261,53 @@ function Section1({ data }) {
     );
   }
 
+  function convertToFullDate(input) {
+    // Split the input string
+    const [datePart] = input.split("&");
+
+    // Trim any whitespace
+    const trimmedDate = datePart.trim();
+
+    // Append the year
+    const fullDate = `${trimmedDate}/2025`;
+
+    return fullDate;
+  }
+
+  function addWeekdays(dateString, daysToAdd) {
+    const [day, month, year] = dateString.split("/").map(Number);
+    let date = new Date(year, month - 1, day);
+
+    let addedDays = 0;
+    while (addedDays < daysToAdd) {
+      date.setDate(date.getDate() + 1);
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        // Skip Sundays (0) and Saturdays (6)
+        addedDays++;
+      }
+    }
+
+    const resultDay = String(date.getDate()).padStart(2, "0");
+    const resultMonth = String(date.getMonth() + 1).padStart(2, "0");
+    const resultYear = date.getFullYear();
+
+    return `${resultDay}/${resultMonth}/${resultYear}`;
+  }
+
   function getEstimatedDate() {
-    const input = data?.pickupCompletedDatatime; // Assume data is defined elsewhere
-    if (!input) {
-      return;
-    }
-
-    // Match the "7-11" pattern
-    const match = input.match(/^\d+-\d+/);
-    const result = match ? match[0] : null;
-
-    if (!result) {
-      console.error("Invalid date format");
-      return;
-    }
-
-    // Split the result into day and month
-    const [day, month] = result.split("-").map(Number);
-    // Ensure the year is correctly handled
-    const year = new Date().getFullYear(); // Default to the current year
-    const date = new Date(year, month - 1, day); // Months are 0-indexed
-
-    // Add 7 days
-    date.setDate(date.getDate() + 7);
-
-    // Format the new date as DD/MM/YYYY
-    const newDay = String(date.getDate()).padStart(2, "0");
-    const newMonth = String(date.getMonth() + 1).padStart(2, "0");
-    const newYear = date.getFullYear();
-
-    const newDate = `${newDay}/${newMonth}/${newYear}`;
-    return newDate; // Output: 18/11/2024 + 7 days = 25/11/2024
+    const estimated_Days =
+      data.service == "Express"
+        ? 5
+        : data.service == "Economy"
+        ? 7
+        : data.service == "Duty Free"
+        ? 14
+        : null;
+    return addWeekdays(
+      convertToFullDate(data?.packageConnectedDataTime),
+      estimated_Days
+    );
   }
 
   return (
