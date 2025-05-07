@@ -296,6 +296,9 @@ function Section1({ data }) {
   }
 
   function getEstimatedDate() {
+    if (data?.packageConnectedDataTime == undefined) {
+      return "-";
+    }
     const estimated_Days =
       data.service == "Express"
         ? 5
